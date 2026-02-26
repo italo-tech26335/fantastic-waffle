@@ -1,12 +1,359 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aurora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --p1: #6c63ff;
+      --p2: #f64f59;
+      --p3: #43e97b;
+      --bg: #0d0d1a;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Background orbs ── */
+    .orbs {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.35;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 520px; height: 520px; background: var(--p1); top: -120px; left: -100px; animation-delay: 0s; }
+    .orb-2 { width: 420px; height: 420px; background: var(--p2); bottom: -80px; right: -60px; animation-delay: -6s; }
+    .orb-3 { width: 300px; height: 300px; background: var(--p3); top: 40%; left: 55%; animation-delay: -12s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 20px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(13,13,26,0.5);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px;
+      background: linear-gradient(90deg, var(--p1), var(--p2));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.65); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.4);
+      border-radius: 99px;
+      padding: 6px 18px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.6px;
+      color: #a89fff;
+      margin-bottom: 28px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .badge span { font-size: 1rem; }
+
+    h1 {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    h1 .grad {
+      background: linear-gradient(135deg, #a78bfa, #f472b6, #fb923c);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 24px;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: rgba(255,255,255,0.55);
+      max-width: 540px;
+      line-height: 1.7;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .cta-group {
+      margin-top: 44px;
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .btn {
+      padding: 14px 32px;
+      border-radius: 14px;
+      font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--p1), #a855f7);
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(108,99,255,0.45);
+    }
+    .btn-primary:hover { box-shadow: 0 12px 40px rgba(108,99,255,0.65); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* ── Scroll indicator ── */
+    .scroll-hint {
+      position: absolute; bottom: 36px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.3); font-size: 0.75rem;
+      animation: fadeUp 0.7s 0.6s ease both, bounce 2.5s 1.3s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 20px; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+
+    /* ── Cards section ── */
+    .section {
+      position: relative; z-index: 1;
+      padding: 100px 24px;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 64px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 36px 32px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      cursor: default;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-color: rgba(255,255,255,0.16);
+    }
+    .card-icon {
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .icon-purple { background: rgba(108,99,255,0.2); }
+    .icon-pink   { background: rgba(246, 79,89, 0.2); }
+    .icon-green  { background: rgba(67,233,123,0.2); }
+    .icon-orange { background: rgba(251,146,60, 0.2); }
+
+    .card h3 {
+      font-size: 1.1rem; font-weight: 700; margin-bottom: 10px;
+    }
+    .card p {
+      font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.7;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 48px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      position: relative; z-index: 1;
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, #a78bfa, #f472b6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%; max-width: 1100px;
+      margin: 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      position: relative; z-index: 1;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 40px 24px;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.82rem;
+    }
+    footer a { color: #a78bfa; text-decoration: none; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <h1>Teste</h1>
-    
+
+  <!-- Background orbs -->
+  <div class="orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="logo">Aurora</div>
+    <ul class="nav-links">
+      <li><a href="#">Início</a></li>
+      <li><a href="#">Features</a></li>
+      <li><a href="#">Sobre</a></li>
+      <li><a href="#">Contato</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge"><span>✨</span> Novo design desbloqueado</div>
+    <h1>Crie coisas<br><span class="grad">incríveis</span> hoje</h1>
+    <p class="subtitle">
+      Uma experiência visual pensada nos mínimos detalhes —
+      elegante, moderna e totalmente personalizável para o seu projeto.
+    </p>
+    <div class="cta-group">
+      <a href="#features" class="btn btn-primary">Explorar agora</a>
+      <a href="#" class="btn btn-ghost">Ver código →</a>
+    </div>
+
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+      scroll
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-number">99%</div>
+      <div class="stat-label">Satisfação</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">2×</div>
+      <div class="stat-label">Mais rápido</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Possibilidades</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Por que usar isso?</h2>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-icon icon-purple">🎨</div>
+        <h3>Design Moderno</h3>
+        <p>Glassmorphism, gradientes e tipografia cuidadosamente escolhida para uma aparência premium.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon icon-pink">⚡</div>
+        <h3>Ultra Rápido</h3>
+        <p>Apenas HTML e CSS puro — sem frameworks pesados, carrega instantaneamente em qualquer dispositivo.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon icon-green">📱</div>
+        <h3>Responsivo</h3>
+        <p>Layout adaptável que funciona perfeitamente em telas de qualquer tamanho, do celular ao ultrawide.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon icon-orange">🌙</div>
+        <h3>Dark Mode Nativo</h3>
+        <p>Tema escuro elegante que cuida dos seus olhos e deixa o design ainda mais sofisticado.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Footer -->
+  <footer>
+    Feito com 💜 usando HTML &amp; CSS puro &nbsp;·&nbsp;
+    <a href="#">Aurora</a> &copy; 2026
+  </footer>
+
 </body>
 </html>
